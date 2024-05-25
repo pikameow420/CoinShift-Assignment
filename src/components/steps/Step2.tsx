@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {Button} from "@nextui-org/button";
+import { Avatar, Card, CardHeader, CardBody, Divider, Spinner} from "@nextui-org/react";
+
 
 interface Step2Props {
-  isConnected: boolean;
-  chainId: number | null;
-  address: string | null;
+  // isConnected: boolean;
+  // chainId: number | null;
+  // address: string | null;
   handleCreateSafeWallet: () => Promise<void>; // Assuming the function returns a Promise
 }
 
@@ -24,24 +24,24 @@ const Step2: React.FC<Step2Props> = ({ handleCreateSafeWallet }) => {
 
   return (
     <div className="flex flex-col items-center py-2">
-      <Card className="w-96 items-center space-y-4">
-        <CardHeader>
-          <CardTitle>Create Coinshift Account</CardTitle>
-        </CardHeader>
-        <Avatar>
-          <AvatarFallback>A</AvatarFallback>
-        </Avatar>
-        <CardContent>
-          <Button
-            onClick={handleClick}
-            className={`primary-button ${loading ? 'bg-gray-500' : 'bg-blue-500'}`}
-            disabled={loading}
-          >
-            {loading ? 'Creating...' : 'Create Coinshift Account'}
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+    <Card >
+      <CardHeader className='justify-center'>
+        <h1>Create Coinshift Account</h1>
+      </CardHeader>
+      <Divider/>
+      <CardBody className="flex flex-col w-64 h-80 items-center justify-between	self-end py-4">
+        <div></div>
+        <Avatar isBordered src="https://i.pravatar.cc/150?u=a04258114e29026708c" className="w-24 h-24 text-large" />
+        <Button
+          onClick={handleClick}
+          className={`primary-button ${loading ? 'bg-green-600' : 'bg-blue-500'}`}
+          disabled={loading}
+        >
+          {loading ? <Spinner size="sm" color="white" /> : 'Create Coinshift Account'}
+        </Button>
+      </CardBody>
+    </Card>
+  </div>
   );
 };
 

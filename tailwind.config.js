@@ -1,77 +1,65 @@
+const { nextui } = require('@nextui-org/react');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
+    extend: {
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      header: 'rgba(167, 191, 255, 0.05)',
+      tab: 'rgba(167, 191, 255, 0.2)',
+      button: 'rgba(188, 207, 254, 0.1)',
+      divider: 'rgba(99, 106, 132, 0.3)',
+      dropdown: '#1e2643',
+      dropdownHover: 'rgba(103, 133, 211, 0.3)',
+      modalBG: '#050e2e',
+      modalBorder: 'rgba(194, 211, 255, 0.3)',
+      'real-black': {
+        DEFAULT: '#02081D',
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      'real-silver': {
+        500: '#636A84',
       },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
+      'real-blue': {
+        700: '#344778',
+        500: '#6785D3',
+        300: '#C2D3FF',
       },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+      'real-contrastBlue': {
+        DEFAULT: '#1F4FCC',
+      },
+      neutral: {
+        500: '#858585',
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}
+  darkMode: 'class',
+  plugins: [
+    nextui({
+      defaultTheme: 'dark',
+      addCommonColors: true,
+      themes: {
+        dark: {
+          colors: {
+            // background: '#02081D',
+            // background: 'linear-gradient(to left top, blue, red)',
+            warning: '#FAAD14',
+          },
+        },
+      },
+    }),
+  ],
+};

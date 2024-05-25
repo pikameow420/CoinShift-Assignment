@@ -1,31 +1,25 @@
-import { Button } from '@/components/ui/button'
-import { useWeb3Modal } from '@web3modal/ethers/react'
-import { useWeb3ModalAccount } from '@web3modal/ethers/react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react';
+import { Button } from "@nextui-org/button";
+import { useWallet } from '../hooks/useWallet';
 
 interface ConnectWalletProps {
-  setAddress: (address: string | null) => void
-  setChainId: (chainId: number | null) => void
-  setIsConnected: (isConnected: boolean) => void
-  handleStepAdvance: () => void
+  handleStepAdvance: () => void;
 }
 
-const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress, setChainId, setIsConnected, handleStepAdvance }) => {
-  const { open } = useWeb3Modal()
-  const { address, chainId, isConnected } = useWeb3ModalAccount()
-
+const ConnectWallet: React.FC<ConnectWalletProps> = ({ handleStepAdvance }) => {
+  const { connectWallet, isConnected, address } = useWallet();
+  
   useEffect(() => {
-    if (isConnected) {
-      setAddress(address ?? null)
-      setChainId(chainId ?? null)
-      setIsConnected(isConnected)
+    if (isConnected && handleStepAdvance !== undefined) {
       handleStepAdvance()
     }
-  }, [address, chainId, isConnected, setAddress, setChainId, setIsConnected, handleStepAdvance])
+  }, [isConnected]);
 
   return (
-    <Button onClick={() => open()}>Connect Wallet</Button>
-  )
+    <Button color='primary' onClick={connectWallet}>
+      {isConnected ? 'Connected' : 'Connect Wallet'}
+    </Button>
+  );
 }
 
-export default ConnectWallet
+export default ConnectWallet;

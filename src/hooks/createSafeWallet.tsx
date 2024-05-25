@@ -39,7 +39,7 @@ export const useCreateSafeWallet = () => {
         };
 
         const safeDeploymentConfig: SafeDeploymentConfig = {
-          saltNonce: "0x20",
+          saltNonce: "0x246",
         };
 
         const safe = await safeFactory.deploySafe({
