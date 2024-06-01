@@ -17,7 +17,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { toast } from "react-toastify";
-import { BrowserProvider, ethers } from "ethers";
+import { ethers } from "ethers";
 import { abi } from "@/constants/contractABI";
 // import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';

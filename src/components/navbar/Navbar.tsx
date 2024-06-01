@@ -1,13 +1,18 @@
-import React from 'react';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link,} from "@nextui-org/react";
+// import React from 'react';
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,} from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 // import { useWallet } from '@/hooks/useWallet';
 // import ConnectWallet from '@/hooks/connectWallet';
 import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
+// import TransakWidget from '../widget/TransakWidget';
+import {useTransak} from '@/hooks/useTransak';
+
+
 
 export default function CoinShiftNavbar() {
   // const { address, connectWallet, isConnected } = useWallet();
-
+  const {initTransak} = useTransak();
+  
   return (
     <Navbar>
       <NavbarBrand>
@@ -33,6 +38,9 @@ export default function CoinShiftNavbar() {
       <NavbarContent justify="end">
         <NavbarItem>
           <DynamicWidget />
+        </NavbarItem>
+        <NavbarItem>
+          <Button onClick={initTransak}>Transak</Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

@@ -27,7 +27,7 @@ const Home: React.FC = () => {
   const Step3Props = { safeAddress };
 
   return (
-    <div className="app-container flex flex-row justify-center items-center gap-16 m-auto mt-20">
+    <div className="app-container flex flex-row flex-wrap justify-center items-center gap-16 m-auto mt-20">
       <div>
         <Accordion variant="bordered" className="w-full" selectedKeys={`${onboardingStep}`}>
           <AccordionItem key="1" aria-label="Accordion 1" title="Step 1">

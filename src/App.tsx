@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "./pages/Home";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CoinShiftNavbar from "./components/navbar/Navbar";
 import { Divider } from "@nextui-org/react";
-// import { WalletProvider } from "./context/walletContext";
-// import { initializeWeb3Modal } from "./lib/web3ModalConfig";
 import {EthersExtension} from "@dynamic-labs/ethers-v6";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
