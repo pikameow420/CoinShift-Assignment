@@ -1,8 +1,9 @@
 import React from 'react';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link,} from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 // import { useWallet } from '@/hooks/useWallet';
-import ConnectWallet from '@/hooks/connectWallet';
+// import ConnectWallet from '@/hooks/connectWallet';
+import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
 
 export default function CoinShiftNavbar() {
   // const { address, connectWallet, isConnected } = useWallet();
@@ -31,7 +32,7 @@ export default function CoinShiftNavbar() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <ConnectWallet/>
+          <DynamicWidget />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

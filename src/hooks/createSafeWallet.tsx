@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { BrowserProvider } from "ethers";
-import { useWeb3ModalProvider } from "@web3modal/ethers/react";
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import {
   SafeAccountConfig,
   EthersAdapter,
@@ -12,53 +11,69 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const useCreateSafeWallet = () => {
-  const { walletProvider } = useWeb3ModalProvider();
+  const { primaryWallet } = useDynamicContext();
   const [safeAddress, setSafeAddress] = useState<string | null>(null);
 
-  const createSafeWallet = async (): Promise<string | null> => {
-    if (!walletProvider) {
-      toast.error("Wallet provider is not available");
+  const address = primaryWallet?.address;
+
+  const getSigner = async (): Promise<ethers.Signer | null> => {
+    try {
+      return await primaryWallet?.connector?.ethers?.getSigner() as ethers.Signer;
+    } catch (error) {
+      console.error("Error getting signer:", error);
+      toast.error("Failed to get signer");
       return null;
     }
+  };
 
+  const getProvider = async (): Promise<ethers.Provider | null> => {
     try {
-      const provider = new BrowserProvider(walletProvider);
-      const signer = await provider.getSigner();
+      return await primaryWallet?.connector?.ethers?.getRpcProvider();
+    } catch (error) {
+      console.error("Error getting provider:", error);
+      toast.error("Failed to get provider");
+      return null;
+    }
+  };
 
-      if (signer) {
-        const ethAdapter = new EthersAdapter({
-          ethers,
-          signerOrProvider: signer,
-        });
+  const createSafeWallet = async (): Promise<string | null> => {
+    try {
+      const signer = await getSigner();
+      if (!signer) return null;
 
-        const safeFactory = await SafeFactory.create({ ethAdapter });
-
-        const safeAccountConfig: SafeAccountConfig = {
-          owners: [await signer.getAddress()],
-          threshold: 1,
-        };
-
-        const safeDeploymentConfig: SafeDeploymentConfig = {
-          saltNonce: "0x246",
-        };
-
-        const safe = await safeFactory.deploySafe({
-          safeAccountConfig,
-          saltNonce: safeDeploymentConfig.saltNonce,
-        });
-
-        const safeAddress = await safe.getAddress();
-        setSafeAddress(safeAddress);
-
-        return safeAddress;
-      } else {
-        toast.error("No signer found");
+      const provider = await getProvider();
+      if (!provider) {
+        toast.error("No provider found");
         return null;
       }
+
+      const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer });
+
+      const safeFactory = await SafeFactory.create({ ethAdapter });
+
+      const safeAccountConfig: SafeAccountConfig = {
+        owners: [address as string],
+        threshold: 1,
+      };
+
+      const safeDeploymentConfig: SafeDeploymentConfig = {
+        saltNonce: "0x269",
+      };
+
+      const safe = await safeFactory.deploySafe({
+        safeAccountConfig,
+        saltNonce: safeDeploymentConfig.saltNonce,
+      });
+
+      const safeAddress = await safe.getAddress();
+      setSafeAddress(safeAddress);
+      toast.success("Safe wallet created successfully!");
+
+      return safeAddress;
     } catch (error) {
       if (error instanceof Error) {
-        toast.error("Error deploying SAFE, maybe try another saltNonce");
-        console.log(error.message)
+        toast.error(error.message);
+        console.error("Error creating safe wallet:", error.message);
       }
       return null;
     }

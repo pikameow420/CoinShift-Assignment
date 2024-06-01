@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dynamic-labs/ethereum": "^2.0.8",
+    "@dynamic-labs/ethers-v6": "^2.0.8",
+    "@dynamic-labs/sdk-react-core": "^2.0.8",
     "@nextui-org/react": "^2.3.6",
     "@safe-global/protocol-kit": "^3.1.1",
-    "@web3modal/ethers": "^4.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
@@ -22,7 +24,8 @@
     "react-dom": "^18.2.0",
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.13.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

@@ -19,7 +19,10 @@ import {
 import { toast } from "react-toastify";
 import { BrowserProvider, ethers } from "ethers";
 import { abi } from "@/constants/contractABI";
-import { useWeb3ModalProvider } from "@web3modal/ethers/react";
+// import { useWeb3ModalProvider } from "@web3modal/ethers/react";
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+
+
 
 interface Step3Props {
   safeAddress: string | null;
@@ -29,18 +32,23 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
 
-  const { walletProvider } = useWeb3ModalProvider();
+  // const { walletProvider } = useWeb3ModalProvider();
+  const { primaryWallet } = useDynamicContext();
+  
 
+  // const provider = await primaryWallet?.connector?.ethers?.getProvider();
   const handleMint = async () => {
     setLoading(true);
     try {
-      if (!walletProvider) {
-        toast.error("Wallet provider is not available");
-        return null;
-      }
-
-      const provider = new BrowserProvider(walletProvider);
-      const signer = await provider.getSigner();
+      // if (!provider) {
+      //   toast.error("Wallet provider is not available");
+      //   return null;
+      // }
+      const signer = await primaryWallet?.connector?.ethers?.getSigner();
+      
+      // const provider = await primaryWallet?.connector?.ethers?.getRpcProvider();
+      // const provider = new BrowserProvider(walletProvider);
+      // const signer = await provider.getSigner();
 
       const contract = new ethers.Contract(
         "0xdD5544d3a85CB8fF56CafF9B54CE51D45bB8cd2f",
