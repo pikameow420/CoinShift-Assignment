@@ -19,22 +19,28 @@ import {
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 import { abi } from "@/constants/contractABI";
-// import { useWeb3ModalProvider } from "@web3modal/ethers/react";
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+// import { useWeb3ModalProvider } from "@web3modal/ethers/react"
 
-
+import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import Safe, {
+  CreateTransactionProps,
+  EthersAdapter,
+} from "@safe-global/protocol-kit";
+import {
+  MetaTransactionData,
+  SafeTransactionDataPartial,
+} from "@safe-global/safe-core-sdk-types";
 
 interface Step3Props {
-  safeAddress: string | null;
+  safeAddress: string;
 }
+
 
 const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
 
-  // const { walletProvider } = useWeb3ModalProvider();
   const { primaryWallet } = useDynamicContext();
-  
 
   // const provider = await primaryWallet?.connector?.ethers?.getProvider();
   const handleMint = async () => {
@@ -44,21 +50,88 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
       //   toast.error("Wallet provider is not available");
       //   return null;
       // }
-      const signer = await primaryWallet?.connector?.ethers?.getSigner();
-      
-      // const provider = await primaryWallet?.connector?.ethers?.getRpcProvider();
       // const provider = new BrowserProvider(walletProvider);
       // const signer = await provider.getSigner();
 
+      // // Send the mint transaction
+      // const tx = await contract.mint(BigInt(0), BigInt(1));
+      // await tx.wait();
+
+      const signer =
+        (await primaryWallet?.connector?.ethers?.getSigner()) as ethers.Signer;
+
+      // const provider = await primaryWallet?.connector?.ethers?.getRpcProvider();
+      const nftAddress = "0x6075d05c5dF214DbA57ff62455ea1D054B1296Ac"
+      const Sepolia_nftAddress = "0x5d8f1a74740557ed320a71e1241228eaf7160e70"
+
       const contract = new ethers.Contract(
-        "0xdD5544d3a85CB8fF56CafF9B54CE51D45bB8cd2f",
+        Sepolia_nftAddress,
         abi,
         signer
       );
+      console.log(contract)
 
-      // Send the mint transaction
-      const tx = await contract.mint(BigInt(0), BigInt(1));
-      await tx.wait();
+      const mintTransactionData = contract.interface.encodeFunctionData(
+        "mint",
+        [BigInt(0), BigInt(1)]
+      );
+
+  
+      // const metaTransactionData: MetaTransactionData[] = [
+      //   {
+      //     to: Sepolia_nftAddress,
+      //     data: mintTransactionData,
+      //     value: "0",
+      //   },
+      // ];
+
+      const safeTransactionData : SafeTransactionDataPartial = {
+        to : Sepolia_nftAddress,
+        data: mintTransactionData,
+        value: "0",
+      }
+
+      //Create Transaction
+
+      const ethAdapter = new EthersAdapter({
+        ethers,
+        signerOrProvider: signer,
+      });
+
+      const safeInstance = await Safe.create({
+        ethAdapter,
+        safeAddress,
+      });
+      console.log("Safe Instance",safeInstance)
+      const safeTransaction = await safeInstance.createTransaction({
+        transactions: [safeTransactionData],
+      });
+
+      console.log(safeTransaction.getSignature)
+
+
+      //Approve Transaction
+      let signedSafeTransaction;
+      try {
+        // Sign the safeTransaction
+        signedSafeTransaction = await safeInstance.signTransaction(
+          safeTransaction
+        );
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+
+      let result;
+      //Execute Transaction
+      try {
+         result = await safeInstance.executeTransaction(signedSafeTransaction);
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log(result)
 
       toast.success("NFT Minted successfully!");
     } catch (error) {
@@ -84,14 +157,14 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
           {safeAddress ? (
             <>
               <Button
-              href={`https://app.safe.global/sep:${safeAddress}`}
-              as={Link}
-              isExternal={true}
-              showAnchorIcon
-              variant="solid"
-            >
-              Safe Wallet{" "}
-            </Button>
+                href={`https://app.safe.global/sep:${safeAddress}`}
+                as={Link}
+                isExternal={true}
+                showAnchorIcon
+                variant="solid"
+              >
+                Safe Wallet{" "}
+              </Button>
               <Button color="primary" onClick={onOpen}>
                 Join Waitlist
               </Button>{" "}

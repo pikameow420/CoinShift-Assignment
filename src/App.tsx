@@ -7,22 +7,26 @@ import { Divider } from "@nextui-org/react";
 import {EthersExtension} from "@dynamic-labs/ethers-v6";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+import { WidgetProvider } from "./context/onRamperWidgetContext";
 
 
 const App: React.FC = () => {
 
   return (
+    
     <DynamicContextProvider
     settings={{
       environmentId: "f376fc87-dbba-46af-b90b-4a801eb79746",
       walletConnectors: [EthereumWalletConnectors],
       walletConnectorExtensions: [EthersExtension],
-      initialAuthenticationMode: 'connect-and-sign',
+      initialAuthenticationMode: "connect-only",
     }}    >
-      <CoinShiftNavbar />
-      <Divider />
-      <Home />
-      <ToastContainer />
+      <WidgetProvider>
+        <CoinShiftNavbar />
+        <Divider />
+        <Home />
+        <ToastContainer />
+      </WidgetProvider>
     </DynamicContextProvider>
   );
 };

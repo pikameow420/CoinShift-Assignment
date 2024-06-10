@@ -6,9 +6,10 @@ import {
   SafeFactory,
   SafeDeploymentConfig,
 } from "@safe-global/protocol-kit";
-import { ethers } from "ethers";
+import { AbstractSigner, Provider, Signer, ethers } from "ethers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 export const useCreateSafeWallet = () => {
   const { primaryWallet } = useDynamicContext();
@@ -20,7 +21,6 @@ export const useCreateSafeWallet = () => {
     try {
       return await primaryWallet?.connector?.ethers?.getSigner() as ethers.Signer;
     } catch (error) {
-      console.error("Error getting signer:", error);
       toast.error("Failed to get signer");
       return null;
     }
@@ -30,7 +30,6 @@ export const useCreateSafeWallet = () => {
     try {
       return await primaryWallet?.connector?.ethers?.getRpcProvider();
     } catch (error) {
-      console.error("Error getting provider:", error);
       toast.error("Failed to get provider");
       return null;
     }
@@ -38,16 +37,15 @@ export const useCreateSafeWallet = () => {
 
   const createSafeWallet = async (): Promise<string | null> => {
     try {
-      const signer = await getSigner();
-      if (!signer) return null;
+      const walletSigner = await getSigner();
+      if (!walletSigner) return null;
 
       const provider = await getProvider();
       if (!provider) {
         toast.error("No provider found");
         return null;
       }
-
-      const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer });
+      const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: walletSigner });
 
       const safeFactory = await SafeFactory.create({ ethAdapter });
 
@@ -57,14 +55,21 @@ export const useCreateSafeWallet = () => {
       };
 
       const safeDeploymentConfig: SafeDeploymentConfig = {
-        saltNonce: "0x269",
+        saltNonce: "0x100",
       };
 
       const safe = await safeFactory.deploySafe({
         safeAccountConfig,
         saltNonce: safeDeploymentConfig.saltNonce,
       });
+      
 
+      console.log("Safe", safe)
+
+      // const signer : Promise<Signer> = {
+
+
+      // }
       const safeAddress = await safe.getAddress();
       setSafeAddress(safeAddress);
       toast.success("Safe wallet created successfully!");
@@ -79,5 +84,6 @@ export const useCreateSafeWallet = () => {
     }
   };
 
-  return { createSafeWallet, safeAddress };
+
+  return {  getSigner, getProvider, createSafeWallet, safeAddress };
 };
