@@ -32,7 +32,7 @@ import {
 } from "@safe-global/safe-core-sdk-types";
 
 interface Step3Props {
-  safeAddress: string;
+  safeAddress: string | null;
 }
 
 
@@ -45,7 +45,9 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
   // const provider = await primaryWallet?.connector?.ethers?.getProvider();
   const handleMint = async () => {
     setLoading(true);
+
     try {
+      if(!safeAddress) return
       // if (!provider) {
       //   toast.error("Wallet provider is not available");
       //   return null;

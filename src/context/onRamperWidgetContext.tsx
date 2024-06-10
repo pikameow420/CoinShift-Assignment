@@ -11,7 +11,7 @@ const defaultValue: WidgetContextType = {
   };
 const WidgetContext = createContext<WidgetContextType>(defaultValue);
 
-export const WidgetProvider = ({ children }) => {
+export const WidgetProvider = ({ children } : {children :any}) => {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
 
   const toggleWidget = () => {
