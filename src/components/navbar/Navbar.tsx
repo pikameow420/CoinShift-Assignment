@@ -19,10 +19,20 @@ import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { WidgetConfig } from "@lifi/widget";
 import WidgetContext from "@/context/onRamperWidgetContext";
 // import {safe} from "@lifi/wallet-management"
-
-
+import { WagmiConfig, createConfig, configureChains, Connector } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public';
+import { sepolia } from 'viem/chains'
+import { SafeConnector } from 'wagmi/connectors/safe';
 
 export default function CoinShiftNavbar() {
+
+  const defaultChains = [sepolia];
+
+  const { chains, publicClient } = configureChains(defaultChains, [publicProvider()]);
+
+  const connectors: Connector[] = [
+    new SafeConnector({ chains }),
+  ];
 
   const { toggleWidget } = useContext(WidgetContext);
   const { primaryWallet ,network} = useDynamicContext();
@@ -161,7 +171,12 @@ export default function CoinShiftNavbar() {
       </Navbar>
       {showLiFiWidget && (
         <div style={{ zIndex: 1000 }}>
-          <LiFiWidget config={lifiConfig} integrator="Coinshift" />
+          <WagmiConfig config={createConfig({
+            connectors: connectors,
+            publicClient,
+          })}>
+            <LiFiWidget config={lifiConfig} integrator="Coinshift" />
+          </WagmiConfig>
         </div>
       )}
       {/* {showOnRamp && (
