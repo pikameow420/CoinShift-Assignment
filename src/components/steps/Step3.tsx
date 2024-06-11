@@ -35,40 +35,41 @@ interface Step3Props {
   safeAddress: string;
 }
 
-// Chain List
-const chainList : { [key: string]: number } = {
-  "eth" : 1, 
-  "sep" : 11155111,
-  "arb1": 42161,
-  "base" : 8453,
-  "aurora" : 84531,
-  "celo" : 42220,
-  "gno" : 100,
-  "oeth" : 10,
-  "matic" : 137,
-  "zkevm" : 1101,
-  "zksync": 324,
-  "scr" : 534351
-}
+const chainList: { [key: number]: string } = {
+  1: "eth",
+  11155111: "sep",
+  42161: "arb1",
+  8453: "base",
+  84531: "aurora",
+  42220: "celo",
+  100: "gno",
+  10: "oeth",
+  137: "matic",
+  1101: "zkevm",
+  324: "zksync",
+  534351: "scr"
+};
 
 const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
-  const [chain, setChain] = useState("")
-
+  const [chain, setChain] = useState<string>("");
   const { primaryWallet } = useDynamicContext();
 
   useEffect(() => {
-    const chainId = primaryWallet?.network;
-    const chainName = Object.keys(chainList).find(key => chainList[key] === chainId);
-
-    if (chainName) {
-      setChain(chainName);
-      console.log(chainName)
-    } else {
-      setChain("");
+    if (!primaryWallet) return;
+    const chainId = primaryWallet.network;
+    if (typeof chainId === "number") {
+      const chainName = chainList[chainId];
+      if (chainName) {
+        setChain(chainName);
+        console.log(chainName);
+      } else {
+        setChain("");
+      }
     }
   }, [primaryWallet?.network]);
+
   
   const handleMint = async () => {
     setLoading(true);
