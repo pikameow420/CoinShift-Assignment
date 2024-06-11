@@ -28,7 +28,9 @@ export const useCreateSafeWallet = () => {
 
   const getProvider = async (): Promise<ethers.Provider | null> => {
     try {
-      return await primaryWallet?.connector?.ethers?.getRpcProvider();
+      const provider = await primaryWallet?.connector?.ethers?.getRpcProvider() as ethers.Provider
+      console.log(provider)
+      return provider;
     } catch (error) {
       toast.error("Failed to get provider");
       return null;
@@ -55,7 +57,7 @@ export const useCreateSafeWallet = () => {
       };
 
       const safeDeploymentConfig: SafeDeploymentConfig = {
-        saltNonce: "0x100",
+        saltNonce: "0x1020",
       };
 
       const safe = await safeFactory.deploySafe({

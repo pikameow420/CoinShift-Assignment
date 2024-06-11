@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Avatar,
@@ -35,21 +35,51 @@ interface Step3Props {
   safeAddress: string;
 }
 
+// Chain List
+const chainList : { [key: string]: number } = {
+  "eth" : 1, 
+  "sep" : 11155111,
+  "arb1": 42161,
+  "base" : 8453,
+  "aurora" : 84531,
+  "celo" : 42220,
+  "gno" : 100,
+  "oeth" : 10,
+  "matic" : 137,
+  "zkevm" : 1101,
+  "zksync": 324,
+  "scr" : 534351
+}
 
 const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const [chain, setChain] = useState("")
 
   const { primaryWallet } = useDynamicContext();
 
-  // const provider = await primaryWallet?.connector?.ethers?.getProvider();
+  useEffect(() => {
+    const chainId = primaryWallet?.network;
+    const chainName = Object.keys(chainList).find(key => chainList[key] === chainId);
+
+    if (chainName) {
+      setChain(chainName);
+      console.log(chainName)
+    } else {
+      setChain("");
+    }
+  }, [primaryWallet?.network]);
+  
   const handleMint = async () => {
     setLoading(true);
     try {
-      // if (!provider) {
-      //   toast.error("Wallet provider is not available");
-      //   return null;
-      // }
+      const provider = await primaryWallet?.connector?.ethers?.getRpcProvider();
+      if (!provider) {
+        toast.error("Wallet provider is not available");
+        return null;
+      }
+      const chainId = primaryWallet?.network
+      console.log(chainId)
       // const provider = new BrowserProvider(walletProvider);
       // const signer = await provider.getSigner();
 
@@ -157,7 +187,7 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
           {safeAddress ? (
             <>
               <Button
-                href={`https://app.safe.global/sep:${safeAddress}`}
+                href={`https://app.safe.global/${chain}:${safeAddress}`}
                 as={Link}
                 isExternal={true}
                 showAnchorIcon
