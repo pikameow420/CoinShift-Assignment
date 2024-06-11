@@ -1,34 +1,33 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "./pages/Home";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CoinShiftNavbar from "./components/navbar/Navbar";
 import { Divider } from "@nextui-org/react";
-import { WalletProvider } from "./context/walletContext";
-import { initializeWeb3Modal } from "./lib/web3ModalConfig";
+import {EthersExtension} from "@dynamic-labs/ethers-v6";
+import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
+import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+import { WidgetProvider } from "./context/onRamperWidgetContext";
+
 
 const App: React.FC = () => {
-  const [isInitialized, setIsInitialized] = React.useState(false);
-  useEffect(() => {
-    const initialize = async () => {
-      await initializeWeb3Modal();
-      setIsInitialized(true);
-    };
-
-    initialize();
-  }, []);
-
-  if (!isInitialized) {
-    return <div>Loading...</div>; 
-  }
 
   return (
-    <WalletProvider>
-      <CoinShiftNavbar />
-      <Divider />
-      <Home />
-      <ToastContainer />
-    </WalletProvider>
+    
+    <DynamicContextProvider
+    settings={{
+      environmentId: "f376fc87-dbba-46af-b90b-4a801eb79746",
+      walletConnectors: [EthereumWalletConnectors],
+      walletConnectorExtensions: [EthersExtension],
+      initialAuthenticationMode: "connect-only",
+    }}    >
+      <WidgetProvider>
+        <CoinShiftNavbar />
+        <Divider />
+        <Home />
+        <ToastContainer />
+      </WidgetProvider>
+    </DynamicContextProvider>
   );
 };
 

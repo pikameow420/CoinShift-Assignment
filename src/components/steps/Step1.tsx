@@ -6,7 +6,8 @@ interface Step1Props {
   handleStepAdvance: () => void;
 }
 
-const Step1: React.FC<Step1Props> = ({ handleStepAdvance }) => {  console.log("helllo",typeof handleStepAdvance); return (
+const Step1: React.FC<Step1Props> = ({ handleStepAdvance }) => { 
+ return (
   <div>
     <Card>
       <CardHeader className="justify-center">Connect Wallet</CardHeader>
