@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { LiFiWidget, WidgetConfig } from "@lifi/widget";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 import { Signer } from "ethers";
-import { useUserWallets } from "@dynamic-labs/sdk-react-core";
-import { LiFiWalletManagement } from "@lifi/wallet-management"; 
+// import { useUserWallets } from "@dynamic-labs/sdk-react-core";
+// import { LiFiWalletManagement } from "@lifi/wallet-management";
 
 
  const useLiFiWidget = () => {

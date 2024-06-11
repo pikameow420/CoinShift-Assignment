@@ -11,11 +11,9 @@
   },
   "dependencies": {
     "@dynamic-labs/ethereum": "^2.0.8",
-    "@dynamic-labs/ethers-v6": "^2.0.8",
+    "@dynamic-labs/ether-v6": "^2.0.8",
     "@dynamic-labs/sdk-react-core": "^2.0.8",
-    "@lifi/sdk": "^2.5.2",
-    "@lifi/wallet-management": "^2.6.1",
-    "@lifi/widget": "^2.10.2",
+    "@lifi/widget": "^2.8.0",
     "@nextui-org/react": "^2.3.6",
     "@safe-global/api-kit": "^2.4.1",
     "@safe-global/protocol-kit": "^3.1.1",
@@ -25,10 +23,12 @@
     "@sumsub/websdk-react": "^2.3.0",
     "@transak/transak-sdk": "^3.1.1",
     "@wagmi/core": "^2.10.5",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "contract-proxy-kit": "^3.0.0",
     "dotenv": "^16.4.5",
-    "ethers": "^6.12.1",
+    "ethers": "^6.13.0",
     "lucide-react": "^0.378.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,7 +36,8 @@
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "viem": "^2.13.3"
+    "viem": "^2.13.3",
+    "web3": "^4.9.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
