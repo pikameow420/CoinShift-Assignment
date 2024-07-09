@@ -1,13 +1,15 @@
 import React from "react";
 import Home from "./pages/Home";
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import CoinShiftNavbar from "./components/navbar/Navbar";
 import { Divider } from "@nextui-org/react";
 import {EthersExtension} from "@dynamic-labs/ethers-v6";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 import { WidgetProvider } from "./context/onRamperWidgetContext";
+import Integrations from "./pages/Integrations";
+
+
 
 
 const App: React.FC = () => {
@@ -24,11 +26,12 @@ const App: React.FC = () => {
       <WidgetProvider>
         <CoinShiftNavbar />
         <Divider />
-        <Home />
-        <ToastContainer />
+        <Home/>
       </WidgetProvider>
     </DynamicContextProvider>
   );
 };
 
 export default App;
+
+

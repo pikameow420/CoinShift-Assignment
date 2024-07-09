@@ -19,9 +19,13 @@ import {
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 import { abi } from "@/constants/contractABI";
-// import { useWeb3ModalProvider } from "@web3modal/ethers/react"
+import chainList from "@/constants/chainLIst";
+// import { useWeb3ModalProvider } from "@web3modal/ethers/react;
+import NFTCheckoutModal from "./NFTCheckoutModal";
+import { CrossmintPayButton } from "@crossmint/client-sdk-react-ui";
 
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+
 import Safe, {
   CreateTransactionProps,
   EthersAdapter,
@@ -35,26 +39,14 @@ interface Step3Props {
   safeAddress: string;
 }
 
-const chainList: { [key: number]: string } = {
-  1: "eth",
-  11155111: "sep",
-  42161: "arb1",
-  8453: "base",
-  84531: "aurora",
-  42220: "celo",
-  100: "gno",
-  10: "oeth",
-  137: "matic",
-  1101: "zkevm",
-  324: "zksync",
-  534351: "scr"
-};
-
 const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
+  if (!safeAddress) return;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const [chain, setChain] = useState<string>("");
-  const { primaryWallet } = useDynamicContext();
+  const { primaryWallet, walletConnector } = useDynamicContext();
+  const [address, setAddress] = useState<string>("");
+  const [signer, setSigner] = useState<any>(null);
 
   useEffect(() => {
     if (!primaryWallet) return;
@@ -70,7 +62,20 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
     }
   }, [primaryWallet?.network]);
 
-  
+  async function getSigner() {
+    const _signer = await walletConnector?.getSigner();
+    const _address = await walletConnector?.getAddress();
+    console.log("_signer", _signer);
+    console.log("_address", _address);
+    setSigner(_signer);
+    setAddress(_address!);
+  }
+
+  useEffect(() => {
+    console.log("walletConnector", walletConnector);
+    getSigner();
+  }, [walletConnector]);
+
   const handleMint = async () => {
     setLoading(true);
     try {
@@ -79,8 +84,8 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
         toast.error("Wallet provider is not available");
         return null;
       }
-      const chainId = primaryWallet?.network
-      console.log(chainId)
+      const chainId = primaryWallet?.network;
+      console.log(chainId);
       // const provider = new BrowserProvider(walletProvider);
       // const signer = await provider.getSigner();
 
@@ -92,22 +97,17 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
         (await primaryWallet?.connector?.ethers?.getSigner()) as ethers.Signer;
 
       // const provider = await primaryWallet?.connector?.ethers?.getRpcProvider();
-      const nftAddress = "0x6075d05c5dF214DbA57ff62455ea1D054B1296Ac"
-      const Sepolia_nftAddress = "0x5d8f1a74740557ed320a71e1241228eaf7160e70"
+      const nftAddress = "0x6075d05c5dF214DbA57ff62455ea1D054B1296Ac";
+      const Sepolia_nftAddress = "0x5d8f1a74740557ed320a71e1241228eaf7160e70";
 
-      const contract = new ethers.Contract(
-        Sepolia_nftAddress,
-        abi,
-        signer
-      );
-      console.log(contract)
+      const contract = new ethers.Contract(Sepolia_nftAddress, abi, signer);
+      console.log(contract);
 
       const mintTransactionData = contract.interface.encodeFunctionData(
         "mint",
         [BigInt(0), BigInt(1)]
       );
 
-  
       // const metaTransactionData: MetaTransactionData[] = [
       //   {
       //     to: Sepolia_nftAddress,
@@ -116,11 +116,11 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
       //   },
       // ];
 
-      const safeTransactionData : SafeTransactionDataPartial = {
-        to : Sepolia_nftAddress,
+      const safeTransactionData: SafeTransactionDataPartial = {
+        to: Sepolia_nftAddress,
         data: mintTransactionData,
         value: "0",
-      }
+      };
 
       //Create Transaction
 
@@ -133,13 +133,12 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
         ethAdapter,
         safeAddress,
       });
-      console.log("Safe Instance",safeInstance)
+      console.log("Safe Instance", safeInstance);
       const safeTransaction = await safeInstance.createTransaction({
         transactions: [safeTransactionData],
       });
 
-      console.log(safeTransaction.getSignature)
-
+      console.log(safeTransaction.getSignature);
 
       //Approve Transaction
       let signedSafeTransaction;
@@ -156,14 +155,12 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
       let result;
       //Execute Transaction
       try {
-         result = await safeInstance.executeTransaction(signedSafeTransaction);
+        result = await safeInstance.executeTransaction(signedSafeTransaction);
       } catch (err) {
         console.log(err);
         return;
       }
-
-      console.log(result)
-
+      console.log(result);
       toast.success("NFT Minted successfully!");
     } catch (error) {
       console.error("Minting error:", error);
@@ -219,7 +216,7 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
             />
           </ModalBody>
           <ModalFooter>
-            <Button
+            {/* <Button
               href="https://testnets.opensea.io/assets/sepolia/0x5d8f1a74740557ed320a71e1241228eaf7160e70/0"
               as={Link}
               isExternal={true}
@@ -227,10 +224,23 @@ const Step3: React.FC<Step3Props> = ({ safeAddress }) => {
               variant="solid"
             >
               OpenSea{" "}
-            </Button>
-            <Button color="primary" onClick={handleMint} disabled={loading}>
+            </Button> */}
+            {/* <Button color="primary" onClick={handleMint} disabled={loading}>
               {loading ? <Spinner size="sm" color="white" /> : "Mint NFT"}
-            </Button>
+            </Button> */}
+            <CrossmintPayButton
+              collectionId="e8ab0f6b-4084-4331-b2dc-340eeb9c1caa"
+              projectId="e485aeb4-3267-464d-9099-1f5a33286691"
+              mintConfig={{
+                type: "erc-1155",
+                tokenId :"0",
+                totalPrice: "0.00001",
+                quantity: "1",
+              }}
+              environment="staging"
+              checkoutProps={{ paymentMethods: ["fiat", "ETH", "SOL"] }}
+              mintTo={address}
+            />
             <Button
               color="danger"
               variant="flat"

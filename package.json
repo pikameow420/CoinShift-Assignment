@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@crossmint/client-sdk-react-ui": "^1.1.9",
     "@dynamic-labs/ethereum": "^2.0.8",
     "@dynamic-labs/ethers-v6": "^2.0.8",
     "@dynamic-labs/sdk-react-core": "^2.0.8",
@@ -22,7 +23,11 @@
     "@sumsub/websdk": "^2.3.0",
     "@sumsub/websdk-react": "^2.3.0",
     "@transak/transak-sdk": "^3.1.1",
+    "@unlock-protocol/contracts": "^0.0.27",
+    "@unlock-protocol/networks": "^0.0.23",
     "@wagmi/core": "^2.10.5",
+    "@walletconnect/core": "^2.13.2",
+    "@walletconnect/web3wallet": "^1.12.3",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -40,6 +45,8 @@
     "web3": "^4.9.0"
   },
   "devDependencies": {
+    "@tanstack/router-devtools": "^1.38.1",
+    "@tanstack/router-vite-plugin": "^1.38.0",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
@@ -54,5 +61,9 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
+  },
+  "overrides": {
+    "rpc-websockets": "7.10.0",
+    "@solana/web3.js": "1.91.6"
   }
 }
